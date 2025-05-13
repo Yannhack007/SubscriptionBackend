@@ -1,88 +1,81 @@
-Backend de Souscription
+ ---
 
-Pour Enregistrer une souscription dans la base de données il faut faire un post sur la route
+### **README.md**
 
-http://localhost:5000/subscription/create
+````markdown
+# Payment Module - Spring Boot 3.3 with ScyllaDB
 
-Et le corps de la requête doit être au format JSON suivant l'exemple suivant:
+## Prérequis
+- **Java JDK 21**
+- **Maven 3.9+**
+- **ScyllaDB 5.1+**
+- **Docker et Docker Compose** (pour ScyllaDB)
 
-- Pour un paiement mobile
-    {
-   "userId": "ec9e4f82-f7d9-4624-aed6-34ad54e795c9",
+---
 
-   "startDate": "2024-07-06",
+## Installation
 
-   "endDate" :"2024-10-06",
-   
-   "status": "active",
-   
-  "paymentDate":"2024-07-06",
+1. **Cloner le dépôt :**
 
-   "category":"Standard",
+```bash
+git clone https://github.com/Yannhack007/SubscriptionBackend.git
+cd SubscriptionBackend
+````
 
-    "amount":15000,
+2. **Démarrer ScyllaDB :**
 
-    "duration":3,
+```bash
+cd docker/
+docker-compose up -d
+```
 
-    "methodType":"mobile",
+3. **Installer les dépendances :**
 
-    "provider":"Orange",
-    
-    "phoneNumber":"698715442"
-   
-}
+```bash
+mvn clean install
+```
 
-- Pour un paiement par carte
-{
-   "userId": "ec9e4f82-f7d9-4624-aed6-34ad54e795c9",
+4. **Configurer l'API de paiement**
 
-   "startDate": "2024-07-06",
+Ouvrez le fichier /configurations/WebClientConfig et renseignez l'url de l'API et la cle
 
-   "endDate" :"2024-10-06",
-   
-   "status": "active",
-   
-  "paymentDate":"2024-07-06",
+5. **Lancer l'application :**
 
-   "category":"Standard",
+```bash
+mvn spring-boot:run
+```
 
-    "amount":15000,
+L'application sera accessible sur `http://localhost:5000`.
 
-    "duration":3,
+---
 
-    "methodType":"card",
+## Endpoints API
 
-    "cardNumber":"XXXX-XxXXX-XXXXX",
-    
-    "expirationDate":"aaaa-mm-jj",
+* `Swagger` - `http://localhost:5000/swagger-ui/index.html#/`
 
-    "cvc":"123"
-   
-}
+---
 
-- Pour un paiement par paypal
-    {
-    "userId": "ec9e4f82-f7d9-4624-aed6-34ad54e795c9",
+## Structure du projet
 
-    "startDate": "2024-07-06",
+* `src/main/java/com/example/payment` - Code source principal
+* `src/main/resources/application.yml` - Configuration Spring Boot
+* `docker-compose.yml` - Déploiement de ScyllaDB
+* `scylla.cql` - Schema de base de donnees Scylla
 
-    "endDate" :"2024-10-06",
-    
-    "status": "active",
-    
-    "paymentDate":"2024-07-06",
+---
 
-    "category":"Standard",
+## Tests
 
-    "methodType":"paypal",
+Pour exécuter les tests unitaires :
 
-        "amount":15000,
+```bash
+mvn test
+```
 
-        "duration":3,
+---
 
-        "paypalEmail":"abc@example.com"
-    }
+## Auteur
 
-NB: En cas de soucis bien vouloir me contacter via mon github
-
-N'hésitez pas à me suivre :) (github: Yannhack007) 
+* Nom : Yann BIKO
+* Email : yannbiko@gmail.com
+* Github : Yannhack007

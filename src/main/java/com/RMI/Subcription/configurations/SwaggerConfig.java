@@ -13,8 +13,6 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        Server ngrokServer=new Server();
-        ngrokServer.setUrl("https://827e-129-0-60-43.ngrok-free.app/");
         return new OpenAPI()
                 .info(new Info()
                         .title("Subscription Management API")
@@ -25,7 +23,6 @@ public class SwaggerConfig {
                                 .email("yannbiko@gmail.com"))
                         .license(new License()
                                 .name("Apache 2.0")
-                                .url("http://www.apache.org/licenses/LICENSE-2.0.html")))
-                        .addServersItem(ngrokServer);
+                                .url("http://www.apache.org/licenses/LICENSE-2.0.html")));
     }
 }

@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  subscription-service:
+    build: .
+    container_name: subscription-service
+    ports:
+      - "5000:5000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CASSANDRA_CONTACT_POINTS=scylla-node
+      - SPRING_CASSANDRA_PORT=9042
+      - SPRING_CASSANDRA_KEYSPACE_NAME=subscription_service
+      - SPRING_CASSANDRA_USERNAME=cassandra
+      - SPRING_CASSANDRA_PASSWORD=cassandra
+      - SPRING_CASSANDRA_LOCAL_DATACENTER=datacenter1
+      - PAYMENT_SERVICE_URL=https://gateway.yowyob.com/payment-service
+      - PAYMENT_SERVICE_KEY=your-api-key
+    depends_on:
+      - scylla-node
+    networks:
+      - subscription-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    restart: unless-stopped
+
+  scylla-node:
+    image: scylladb/scylla:latest
+    container_name: scylla-node
+    ports:
+      - "9042:9042"
+    volumes:
+      - scylla-data:/var/lib/scylla
+    environment:
+      - SCYLLA_DEVELOPER_MODE=1
+    command: --authenticator password --authorizer CassandraAuthorizer
+    networks:
+      - subscription-network
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+        reservations:
+          memory: 1G
+          cpus: '1'
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  subscription-network:
+    driver: bridge
+    name: subscription-network
+
+volumes:
+  scylla-data:
+    name: subscription-scylla-data
